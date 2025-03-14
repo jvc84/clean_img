@@ -50,10 +50,13 @@ def convert_pngs_to_pdf(image_path_pattern, pdf_path):
 #### PDF to PNG
 def pdf_to_png_memory( pdf_path, dpi=300):
     try:
+        print("PDF to png mem")
         images = convert_from_path(pdf_path, dpi=dpi)
+
         png_images = []
 
         for image in images:
+            print("Image")
             img_byte_arr = BytesIO()
             image.save(img_byte_arr, format='PNG')
             img_byte_arr = BytesIO(img_byte_arr.getvalue()) #resets byteIO cursor
@@ -129,9 +132,22 @@ def contrast_me(_i, _byte_array, _contrast_dir):
 
 
 
+from parse import prepare_and_download
+import sys
+import time
 
-if __name__ == "__main__" :
-    import time
+
+if __name__ == "__main__":
+    try:
+        arg = sys.argv[1]
+        if arg == "--no-download":
+            print("No download")
+        else:
+            print(f"No such arg: {arg}")
+            sys.exit(1)
+    except IndexError:
+        prepare_and_download()
+
 
     start_time = time.perf_counter()
 
@@ -139,11 +155,11 @@ if __name__ == "__main__" :
     cleared_image_directory = "cleared"
     contrasted_image_directory = "contrasted"
     image_path_pattern = os.path.join(image_directory, "*.png")
-    convert_pngs_to_pdf(image_path_pattern,"source.pdf")
+    # convert_pngs_to_pdf(image_path_pattern,"source.pdf")
 
-    os.makedirs(image_directory, exist_ok=True)
-    os.makedirs(cleared_image_directory, exist_ok=True)
-    os.makedirs(contrasted_image_directory, exist_ok=True)
+    # os.makedirs(image_directory, exist_ok=True)
+    # os.makedirs(cleared_image_directory, exist_ok=True)
+    # os.makedirs(contrasted_image_directory, exist_ok=True)
 
     # pdf to png
     pdf_file = "source.pdf"
@@ -151,6 +167,7 @@ if __name__ == "__main__" :
 
 
     if png_byte_arrays:
+        print("PNG arrays")
         list_exec = []
         # Process the PNG images in memory
         for i, byte_array in enumerate(png_byte_arrays):
